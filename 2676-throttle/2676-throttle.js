@@ -4,26 +4,24 @@
  * @return {Function}
  */
 var throttle = function(fn, t) {
-    let timeId=null;
-    let storedArgs=null;
-
-    function callWithStoredArgs(){
-        if(storedArgs){
-            fn.apply(null,storedArgs);
-            storedArgs=null;
-            timeId=setTimeout(callWithStoredArgs,t);
-        } else{
-            timeId=null;
+   
+    var prev = -1;
+    var time = null;
+    
+    return function(...args) {
+        var currTime = Date.now();
+        if(currTime - prev >=t){
+            fn(...args);
+            prev = currTime;
+        }else{
+            clearTimeout(time);
+            time= setTimeout(()=>{
+                fn(...args);
+                time = null;
+                prev += t;
+            }, prev+t-currTime);
         }
     }
-  return function(...args) {
-      if(!timeId){
-          fn.apply(null,args);
-          timeId=setTimeout(callWithStoredArgs,t);
-      }else{
-          storedArgs=args;
-      }
-  }
 };
 
 /**
