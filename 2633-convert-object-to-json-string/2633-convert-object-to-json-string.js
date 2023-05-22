@@ -10,3 +10,10 @@ var jsonStringify = function(object) {
   if (typeof object === 'object') return '{' + Object.keys(object).map(key => jsonStringify(key) + ':' + jsonStringify(object[key])).join(',') + '}';
   return '';
 };
+const escapeMap = {
+  '"': '\\"',
+  '\\': '\\\\',
+  '\n': '\\n',
+  '\r': '\\r',
+  '\t': '\\t'
+};
