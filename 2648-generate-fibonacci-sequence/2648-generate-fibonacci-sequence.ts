@@ -1,20 +1,11 @@
-/**
- * @return {Generator<number>}
- */
-var fibGenerator = function*() {
-
+function* fibGenerator(): Generator<number, any, number> {
   let current = 0; 
   let next = 1;
 
   while (true) {
     yield current; 
-
+    // easier way to swap elements
     [current, next] = [next, current + next];
-
-    // The above line is equivalent to the following:
-    // let temp = current;
-    // current = next;
-    // next = temp + next;
   }
 };
 
