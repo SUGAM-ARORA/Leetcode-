@@ -1,8 +1,6 @@
 class Solution {
 public:
-    bool isPowerOfFour(int n) {
-      if (n <= 0) return false;
-    double x = log(n) / log(4);
-    return fmod(x, 1.0) == 0;  
+    bool isPowerOfFour(int num) {
+     return (num > 0) && ((num & (num - 1)) == 0) && ((num & 0x55555555) == num);
     }
 };
