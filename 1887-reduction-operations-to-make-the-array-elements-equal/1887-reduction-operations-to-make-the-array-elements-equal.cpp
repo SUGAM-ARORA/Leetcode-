@@ -2,14 +2,21 @@
 class Solution {
 public:
     int reductionOperations(vector<int>& nums) {
-        sort(nums.rbegin(), nums.rend());
-        int count=0, sum=0, prev=50001;
+        int freq[50001]={0};
+        int minN=50000, maxN=0;
         #pragma unroll
         for(int x: nums){
-            if (x!=prev)
+            freq[x]++;
+            minN=min(minN, x);
+            maxN=max(maxN, x);
+        }
+        int count=0, sum=0;
+        #pragma unroll
+        for(int x=maxN; x>minN; x--){
+            if (freq[x] > 0) {
+                sum+=freq[x];
                 count+=sum;
-            sum++;
-            prev=x;
+            }
         }
         return count;
     }
