@@ -1,41 +1,25 @@
+#pragma GCC optimize("O3")
 class Solution {
 public:
-    int garbageCollection(vector<string>& garbage, vector<int>& travel) {
-        long long totalMinutes = 0;  // Total minutes needed for garbage collection
-        long long currentTravelTime = 0;  // Current travel time
-
-        // Add the initial minutes required to collect garbage at the first house
-        totalMinutes += garbage[0].size();
-
-        vector<int> lastGarbageIndices(3, -1);  // Keep track of the last occurrence of each type of garbage
-
-        // Iterate through each house starting from the second house
-        for (int houseIndex = 1; houseIndex < garbage.size(); houseIndex++) {
-            // Add the minutes required to collect garbage at the current house
-            totalMinutes += garbage[houseIndex].size();
-
-            // Update the indices of the last occurrence of each type of garbage
-            if (garbage[houseIndex].find("M") != garbage[houseIndex].npos) 
-                lastGarbageIndices[0] = houseIndex - 1;
-            if (garbage[houseIndex].find("P") != garbage[houseIndex].npos) 
-                lastGarbageIndices[1] = houseIndex - 1;
-            if (garbage[houseIndex].find("G") != garbage[houseIndex].npos) 
-                lastGarbageIndices[2] = houseIndex - 1;
+    int garbageCollection(vector<string>& garbage, vector<int>& travel) 
+    {
+        const int n=garbage.size();
+        const char* GPM="GPM";
+        int time=0, t[3]={0}; 
+        #pragma unroll
+        for(int i=n-1; i>=0; i--){//time for collecting garbage
+            string x=garbage[i];
+            time+=x.size();
+            #pragma unroll
+            for(int j=0; j<3; j++)
+                if (t[j]==0 && x.find(GPM[j])!=-1) t[j]=i;
+           
         }
-
-        // Iterate through each travel segment
-        for (int travelIndex = 0; travelIndex < travel.size(); travelIndex++) {
-            // Add the current travel time
-            currentTravelTime += travel[travelIndex];
-
-            // Add the minutes required to collect garbage if a garbage truck is at the corresponding house
-            for (int truckIndex = 0; truckIndex < 3; truckIndex++) {
-                if (lastGarbageIndices[truckIndex] == travelIndex) {
-                    totalMinutes += currentTravelTime;
-                }
-            }
-        }
-
-        return totalMinutes;
+        sort(t, t+3);
+        // Add travel time
+        time+=3*accumulate(travel.begin(), travel.begin()+t[0],0)
+            +2*accumulate(travel.begin()+t[0], travel.begin()+t[1],0)
+            +accumulate(travel.begin()+t[1], travel.begin()+t[2],0);
+        return time;
     }
 };
